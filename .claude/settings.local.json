@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx claude-code-templates@latest --agent=development-team/ui-ux-designer --yes)",
+      "Bash(npx claude-code-templates@latest --mcp \"devtools/context7,devtools/chrome-devtools,devtools/figma-dev-mode,devtools/serena,devtools/huggingface\" --yes)",
+      "mcp__plugin_testing-suite_playwright-server__browser_navigate",
+      "mcp__plugin_testing-suite_playwright-server__browser_click",
+      "mcp__plugin_testing-suite_playwright-server__browser_snapshot",
+      "mcp__plugin_testing-suite_playwright-server__browser_wait_for",
+      "mcp__plugin_testing-suite_playwright-server__browser_take_screenshot",
+      "mcp__plugin_testing-suite_playwright-server__browser_resize",
+      "mcp__plugin_testing-suite_playwright-server__browser_run_code",
+      "mcp__plugin_testing-suite_playwright-server__browser_evaluate",
+      "mcp__plugin_testing-suite_playwright-server__browser_close",
+      "Bash(find:*)",
+      "Skill(frontend-design:frontend-design)",
+      "Bash(node --check:*)",
+      "WebFetch(domain:quiet-beijinho-babcf0.netlify.app)",
+      "Bash(git remote:*)",
+      "Bash(git remote add:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

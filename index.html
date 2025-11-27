@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEGEN LIFE CASINO™ | Vintage Racing Form</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Roboto+Slab:wght@400;700&family=Rye&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="waiver_modal.css">
+</head>
+
+<body>
+
+    <!-- BACKGROUND TEXTURES -->
+    <div class="texture-overlay"></div>
+    <div class="vignette"></div>
+
+    <!-- HEADER MARQUEE -->
+    <header class="racing-header">
+        <div class="brand-block">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <h1 class="brand-logo">DEGEN LIFE <span class="accent">CASINO</span></h1>
+                <button class="info-trigger" id="header-info-trigger" aria-label="Why this exists" aria-expanded="false" aria-controls="explainer-tooltip">?</button>
+            </div>
+            <div class="brand-sub">CAREGIVER COLLAPSE • Parimutual Betting</div>
+            <p class="brand-quote">"Where the only thing higher than the stakes are your cortisol levels."</p>
+        </div>
+        <div class="ticker-display">
+            <div class="ticker-label">LIVE WIRE:</div>
+            <div class="ticker-window">
+                <div class="ticker-content" id="ticker-content">
+                    <!-- JS Populated -->
+                </div>
+            </div>
+        </div>
+        <div class="wallet-trigger" id="wallet-toggle-btn">
+            <div class="trigger-label">ASSET LEDGER</div>
+            <div class="trigger-icon">▼</div>
+        </div>
+    </header>
+
+    <!-- EXPANDABLE WALLET DRAWER -->
+    <div class="wallet-drawer" id="wallet-drawer">
+        <div class="drawer-inner">
+            <div class="drawer-header">
+                <h3>YOUR INVENTORY</h3>
+                <button class="close-btn" id="close-wallet">CLOSE LEDGER [X]</button>
+            </div>
+            <div class="wallet-grid" id="wallet-grid">
+                <!-- JS Populated -->
+            </div>
+        </div>
+    </div>
+
+    <main class="racing-form-grid">
+
+        <!-- LEFT COL: RUNNER STATS (FORM) -->
+        <section class="form-card runner-card">
+            <div class="card-header">
+                <span class="header-icon">❤</span> GIRLFRIEND PROFILE
+            </div>
+            <div class="runner-profile">
+                <div class="runner-id">
+                    <div class="runner-name">STACEY</div>
+                    <div class="class-block">
+                        <div class="class-row">
+                            <span class="class-label">CLASS</span>
+                            <span class="class-value">🔮 Unlicensed WebMD Warlock</span>
+                        </div>
+                        <div class="class-divider"></div>
+                        <div class="subclass-row">
+                            <span class="subclass-label">SUBCLASS</span>
+                            <span class="subclass-value">Google Scholar (Panic Edition)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-matrix">
+                    <div class="stat-cell">
+                        <label>LOCATION</label>
+                        <div class="value">BEDSIDE (DAY 8)</div>
+                    </div>
+                    <div class="stat-cell">
+                        <label>HOURS AWAKE</label>
+                        <div class="value text-danger">UNKNOWN</div>
+                    </div>
+                    <div class="stat-cell">
+                        <label>THREAT LEVEL</label>
+                        <div class="value text-warning">SPICY</div>
+                    </div>
+                    <div class="stat-cell">
+                        <label>SANITY</label>
+                        <div class="value text-danger">12%</div>
+                    </div>
+                </div>
+
+                <div class="modifiers-block">
+                    <div class="mod-group">
+                        <h5>▲ ACTIVE BUFFS</h5>
+                        <div class="mod-list">
+                            <span class="mod-tag buff">💊 Vyvanse</span>
+                            <span class="mod-tag buff">⚡ 2x Monster</span>
+                            <span class="mod-tag buff">🧠 Hyperfocus</span>
+                            <span class="mod-tag buff">☢️ Spite</span>
+                        </div>
+                    </div>
+                    <div class="mod-group">
+                        <h5>▼ ACTIVE DEBUFFS</h5>
+                        <div class="mod-list">
+                            <span class="mod-tag debuff">😴 Sleep Debt</span>
+                            <span class="mod-tag debuff">💡 Fluor. Lights</span>
+                            <span class="mod-tag debuff">🔔 Ambient Beeping</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bio-section">
+                    <h5>📝 BIO</h5>
+                    <div class="bio-content">
+                        <p>Day 8. Sanity: 12%. Sleep: a rumor she's heard but can't verify. Stacey no longer checks the clock — she communes with it. Every unanswered call button strengthens her psychic powers. Every "we're monitoring it" adds another inch to her thousand-yard stare.</p>
+                        <p>She can smell hospital-grade gaslighting through three closed doors and has developed a facial expression best described as "if 'per my last email' had a face."</p>
+                        <p>Sustained entirely by hallway coffee, spite, and the dark art of relentless follow-up, she is now more vengeance than woman. Less patient, more haunting. Last week she made a resident cry. She doesn't remember doing it. She's choosing not to investigate.</p>
+                        <p class="bio-odds"><strong>Odds of discharge:</strong> [404 Error].<br><strong>Odds of her leaving before Aaron:</strong> cute that you'd ask.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- RIGHT COL: ODDS BOARD (PAY TABLE) -->
+        <section class="form-card odds-card">
+            <div class="card-header">
+                <span class="header-icon">📊</span> LIVE ODDS BOARD
+                <span class="live-indicator">● LIVE</span>
+            </div>
+            <div class="odds-table-wrapper">
+                <div class="table-header-row">
+                    <div class="th-hours">HOURS</div>
+                    <div class="th-scenario">SCENARIO</div>
+                    <div class="th-odds">ODDS</div>
+                    <div class="th-payout">PAYOUT</div>
+                </div>
+                <div class="table-body" id="odds-body">
+                    <!-- JS Populated -->
+                </div>
+            </div>
+            <div class="card-footer">
+                * Select a scenario to view detailed breakdown and place wager.
+            </div>
+        </section>
+
+    </main>
+
+    <!-- VINTAGE FOOTER DISCLAIMER -->
+    <footer class="vintage-footer">
+        <p class="disclaimer-quote">"⚠️ DISCLAIMER: This is satire. No real money. No real bets. Just fake garbage
+            currencies and the very real chaos of hospital caregiving. The house always wins... except when it
+            doesn't... which is never... unless..."</p>
+        <p class="disclaimer-fineprint">Not responsible for sleep debt, hallucinations, or accidental clairvoyance.</p>
+
+        <!-- TOGGLE CONTROLS -->
+        <div class="footer-toggles">
+            <!-- BURNOUT PANTHEON LINK -->
+            <button class="pantheon-footer-btn" id="leaderboard-toggle" aria-label="View the Burnout Pantheon">
+                🏛️ THE BURNOUT PANTHEON
+            </button>
+
+            <!-- REDUCE MOTION TOGGLE -->
+            <div class="motion-toggle-wrapper">
+                <span class="motion-toggle-icon" aria-hidden="true">🐢</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="reduce-motion-toggle">
+                    <span class="slider round"></span>
+                </label>
+                <span class="toggle-label">REDUCE MOTION</span>
+            </div>
+
+            <!-- SOUND TOGGLE (OFF BY DEFAULT) -->
+            <div class="sound-toggle-wrapper">
+                <span class="sound-toggle-icon" id="sound-toggle-icon" aria-hidden="true">💔</span>
+                <label class="toggle-switch" for="sound-toggle">
+                    <span class="visually-hidden">Toggle sound effects</span>
+                    <input type="checkbox" id="sound-toggle" aria-describedby="sound-toggle-label">
+                    <span class="slider round"></span>
+                </label>
+                <span class="toggle-label" id="sound-toggle-label">SOUND: OFF</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ONBOARDING WAIVER MODAL -->
+    <div class="waiver-overlay" id="waiver-overlay" role="dialog" aria-modal="true" aria-labelledby="waiver-title" aria-describedby="waiver-body">
+        <div class="waiver-modal">
+            <div class="waiver-header">
+                <h2 id="waiver-title">PATIENT INTAKE / LIABILITY WAIVER</h2>
+                <div class="waiver-stamp">APPROVED</div>
+            </div>
+            <div class="waiver-body" id="waiver-body">
+                <p><strong>NOTICE TO ENTRANT:</strong></p>
+                <p>You have entered <strong>DEGEN LIFE CASINO</strong>.</p>
+                <p>By proceeding, you acknowledge that sleep is optional and caffeine is a food group.</p>
+                <hr class="waiver-divider">
+                <p class="instruction-text"><strong>PROTOCOL:</strong></p>
+                <ol>
+                    <li>Review the <strong>LIVE ODDS BOARD</strong>.</li>
+                    <li>Select a <strong>SCENARIO</strong> to view details.</li>
+                    <li>Place your wager and accept the consequences.</li>
+                </ol>
+            </div>
+            <button class="waiver-btn" id="accept-waiver-btn">I ACCEPT THE CHAOS</button>
+        </div>
+    </div>
+
+    <!-- DETAILED TICKET MODAL -->
+    <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="ticket-modal">
+            <div class="ticket-header">
+                <div class="ticket-title-block">
+                    <h2 id="modal-title">SCENARIO NAME</h2>
+                    <div class="ticket-meta" id="modal-hours">HOURS</div>
+                </div>
+                <div class="ticket-odds-block">
+                    <div class="big-odds" id="modal-odds">5/1</div>
+                    <div class="ticket-desc" id="modal-desc">Description goes here</div>
+                </div>
+            </div>
+
+            <div class="ticket-body" id="modal-details">
+                <!-- JS Populated -->
+            </div>
+
+            <div class="wager-section" id="wager-section">
+                <div class="wager-header">YOUR WAGER</div>
+                <div class="wager-asset-display" id="wager-asset-display">
+                    <span class="no-asset-selected">No asset selected. Open your ledger to choose.</span>
+                </div>
+                <div class="wager-amount-row" id="wager-amount-row" style="display: none;">
+                    <label for="wager-amount">AMOUNT:</label>
+                    <div class="wager-input-group">
+                        <button class="wager-adjust" id="wager-decrease" aria-label="Decrease wager">−</button>
+                        <input type="text" id="wager-amount" class="wager-input" value="1" readonly>
+                        <button class="wager-adjust" id="wager-increase" aria-label="Increase wager">+</button>
+                    </div>
+                    <span class="wager-max">/ <span id="wager-max-amount">0</span> available</span>
+                </div>
+            </div>
+
+            <div class="ticket-actions">
+                <button class="bet-btn" onclick="placeBet()">PLACE WAGER</button>
+                <button class="cancel-btn" onclick="closeModal()">CANCEL</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast">
+        <div class="toast-icon">🎰</div>
+        <div class="toast-content">
+            <div class="toast-title">SYSTEM ALERT</div>
+            <div class="toast-message">Action Confirmed</div>
+        </div>
+    </div>
+
+    <!-- BET CONFIRMATION BANNER -->
+    <div class="bet-banner" id="bet-banner" role="alert" aria-live="assertive">
+        <div class="bet-banner-content">
+            <span class="bet-banner-icon">🎰</span>
+            <span class="bet-banner-text">
+                <span class="highlight">BET PLACED:</span>
+                <span id="bet-banner-scenario">SCENARIO NAME</span>
+                <span class="sanity" id="bet-banner-sanity">— SANITY -5</span>
+                <span> | GOOD LUCK, CHAMP.</span>
+            </span>
+        </div>
+        <button class="bet-banner-close" id="bet-banner-close" aria-label="Close banner">✕</button>
+    </div>
+
+    <!-- WELCOME BANNER (Feature 11) -->
+    <div class="welcome-banner" id="welcome-banner" role="complementary" aria-label="Welcome message">
+        <div class="welcome-content">
+            <div class="welcome-icon">🏥</div>
+            <div class="welcome-text">
+                <h3 class="welcome-headline">WELCOME, EXHAUSTED CHAMPION</h3>
+                <p class="welcome-body">You've found the waiting room of the soul. Pull up a chair.</p>
+            </div>
+            <button class="welcome-dismiss" id="welcome-dismiss" aria-label="Dismiss welcome message">GOT IT</button>
+        </div>
+    </div>
+
+    <!-- HALL OF FAME: THE BURNOUT PANTHEON -->
+    <div class="modal-overlay pantheon-modal" id="leaderboard-modal" role="dialog" aria-modal="true" aria-labelledby="pantheon-title">
+        <div class="pantheon-panel">
+            <div class="pantheon-header">
+                <h2 id="pantheon-title">🏛️ THE BURNOUT PANTHEON</h2>
+                <div class="pantheon-subtitle">LEGENDARY CAREGIVERS WHO STARED INTO THE VOID</div>
+                <button class="close-btn" id="close-leaderboard" aria-label="Close">CLOSE [X]</button>
+            </div>
+            <div class="pantheon-body">
+                <p class="pantheon-intro">These are not competitors. These are <em>warnings</em>. Each soul listed below reached legendary status during their vigil. Some recovered. Some became one with the fluorescent lights. All are remembered.</p>
+
+                <div class="pantheon-legends" id="pantheon-legends">
+                    <!-- Legend 1: Doomscroll Dan -->
+                    <div class="legend-card">
+                        <button class="legend-header" aria-expanded="false">
+                            <span class="legend-rank">I</span>
+                            <div class="legend-identity">
+                                <span class="legend-name">Doomscroll Dan</span>
+                                <span class="legend-class">Raccoon Lord</span>
+                            </div>
+                            <span class="legend-toggle">▼</span>
+                        </button>
+                        <div class="legend-content" hidden>
+                            <div class="legend-stats">
+                                <span>Hours Awake: 127</span>
+                                <span>Sanity: -4%</span>
+                                <span>Vending Machine Debt: $847</span>
+                            </div>
+                            <p class="legend-story">Dan's vigil began as most do: with hope and a fully charged phone. By hour 40, he had memorized every crack in the ceiling tiles. By hour 80, he began naming them. At hour 100, the ceiling tiles started responding. Dan never left the hospital. Some say if you walk the halls at 3 AM, you can still hear him muttering WebMD symptoms to the vending machine.</p>
+                        </div>
+                    </div>
+
+                    <!-- Legend 2: Linda From Accounting -->
+                    <div class="legend-card">
+                        <button class="legend-header" aria-expanded="false">
+                            <span class="legend-rank">II</span>
+                            <div class="legend-identity">
+                                <span class="legend-name">Linda From Accounting</span>
+                                <span class="legend-class">Insurance Paladin</span>
+                            </div>
+                            <span class="legend-toggle">▼</span>
+                        </button>
+                        <div class="legend-content" hidden>
+                            <div class="legend-stats">
+                                <span>Hours on Hold: 312</span>
+                                <span>Forms Conquered: 847</span>
+                                <span>Claim Denials Appealed: 23</span>
+                            </div>
+                            <p class="legend-story">Linda wasn't here for a loved one. Linda was here because the insurance company said she didn't exist. Armed with nothing but a fax machine and weaponized patience, she spent 6 days proving her own identity to United Healthcare. She won. The insurance rep who denied her claim was later found wandering the parking garage, muttering about "the woman with the forms." Linda now haunts the billing department, helping others navigate the labyrinth.</p>
+                        </div>
+                    </div>
+
+                    <!-- Legend 3: CaffeineEntity42 -->
+                    <div class="legend-card">
+                        <button class="legend-header" aria-expanded="false">
+                            <span class="legend-rank">III</span>
+                            <div class="legend-identity">
+                                <span class="legend-name">CaffeineEntity42</span>
+                                <span class="legend-class">Eldritch Barista</span>
+                            </div>
+                            <span class="legend-toggle">▼</span>
+                        </button>
+                        <div class="legend-content" hidden>
+                            <div class="legend-stats">
+                                <span>Caffeine Level: Illegal</span>
+                                <span>Blood Type: Espresso</span>
+                                <span>Sleep Debt: ∞</span>
+                            </div>
+                            <p class="legend-story">No one knows their real name. They appeared on Day 3 of the great ER backup of 2019, already vibrating at a frequency that made the heart monitors nervous. They survived entirely on vending machine coffee and spite, eventually achieving a state of consciousness so elevated they could predict nurse shift changes. Last seen ascending through the cafeteria ceiling after consuming their 47th cup.</p>
+                        </div>
+                    </div>
+
+                    <!-- Legend 4: IV_PoleVaulter -->
+                    <div class="legend-card">
+                        <button class="legend-header" aria-expanded="false">
+                            <span class="legend-rank">IV</span>
+                            <div class="legend-identity">
+                                <span class="legend-name">IV_PoleVaulter</span>
+                                <span class="legend-class">Mobility Rogue</span>
+                            </div>
+                            <span class="legend-toggle">▼</span>
+                        </button>
+                        <div class="legend-content" hidden>
+                            <div class="legend-stats">
+                                <span>Laps Around Floor 4: 2,847</span>
+                                <span>IV Pole Wheelies: 12</span>
+                                <span>Escape Attempts: 3</span>
+                            </div>
+                            <p class="legend-story">They said the patient couldn't walk. They were wrong. Armed with nothing but a hospital gown and an IV pole with squeaky wheels, IV_PoleVaulter became the terror of the fourth floor. Nurses learned to track them by the rhythmic squeak-squeak-squeak echoing through the halls. They once completed a full circuit of the building in under 8 minutes, IV bag flapping like a war banner. The hospital now has a plaque in their honor.</p>
+                        </div>
+                    </div>
+
+                    <!-- Legend 5: Greg From Room 4B -->
+                    <div class="legend-card">
+                        <button class="legend-header" aria-expanded="false">
+                            <span class="legend-rank">V</span>
+                            <div class="legend-identity">
+                                <span class="legend-name">Greg From Room 4B</span>
+                                <span class="legend-class">Accidental Guru</span>
+                            </div>
+                            <span class="legend-toggle">▼</span>
+                        </button>
+                        <div class="legend-content" hidden>
+                            <div class="legend-stats">
+                                <span>Wisdom Dispensed: ∞</span>
+                                <span>Actual Medical Knowledge: 0</span>
+                                <span>Jell-O Cups Consumed: 156</span>
+                            </div>
+                            <p class="legend-story">Greg was just a guy with appendicitis. But somewhere around Day 4, people started asking him questions. By Day 6, there was a line outside his room. "Greg knows things," they whispered. He didn't. He was just very good at nodding wisely while on pain medication. His most famous quote—"The body knows, man. The body knows."—is now embroidered on a pillow in the waiting room. Greg went home. His legend stayed.</p>
+                        </div>
+                    </div>
+
+                    <!-- Legend 6: NurseWhisperer_99 -->
+                    <div class="legend-card">
+                        <button class="legend-header" aria-expanded="false">
+                            <span class="legend-rank">VI</span>
+                            <div class="legend-identity">
+                                <span class="legend-name">NurseWhisperer_99</span>
+                                <span class="legend-class">Summoner Supreme</span>
+                            </div>
+                            <span class="legend-toggle">▼</span>
+                        </button>
+                        <div class="legend-content" hidden>
+                            <div class="legend-stats">
+                                <span>Nurse Response Time: Instant</span>
+                                <span>Call Button Usage: 0</span>
+                                <span>Snacks Obtained: 200+</span>
+                            </div>
+                            <p class="legend-story">They never pressed the call button. Not once. Yet nurses appeared whenever they needed something—sometimes before they knew they needed it. Some say they had a deal with the hospital spirits. Others say they simply understood the ancient art of making eye contact at exactly the right moment. Either way, NurseWhisperer_99 was discharged with a care package so large it required a wheelchair to transport.</p>
+                        </div>
+                    </div>
+
+                    <!-- Legend 7: ParkingGarage_Oracle -->
+                    <div class="legend-card">
+                        <button class="legend-header" aria-expanded="false">
+                            <span class="legend-rank">VII</span>
+                            <div class="legend-identity">
+                                <span class="legend-name">ParkingGarage_Oracle</span>
+                                <span class="legend-class">Cryptid Seer</span>
+                            </div>
+                            <span class="legend-toggle">▼</span>
+                        </button>
+                        <div class="legend-content" hidden>
+                            <div class="legend-stats">
+                                <span>Location: Level B2, Always</span>
+                                <span>Prophecies Made: 47</span>
+                                <span>Prophecies Correct: 47</span>
+                            </div>
+                            <p class="legend-story">Nobody knows when they arrived or how long they've been there. The Oracle simply exists in parking level B2, next to the concrete pillar with the mysterious stain. Ask them anything—discharge times, test results, when the good cafeteria cookies come out—and they'll know. They accept payment only in parking validation stamps. Some believe they ARE the parking garage.</p>
+                        </div>
+                    </div>
+
+                    <!-- Legend 8: Jell-O_Heist_Legend -->
+                    <div class="legend-card">
+                        <button class="legend-header" aria-expanded="false">
+                            <span class="legend-rank">VIII</span>
+                            <div class="legend-identity">
+                                <span class="legend-name">Jell-O_Heist_Legend</span>
+                                <span class="legend-class">Cafeteria Bandit</span>
+                            </div>
+                            <span class="legend-toggle">▼</span>
+                        </button>
+                        <div class="legend-content" hidden>
+                            <div class="legend-stats">
+                                <span>Jell-O Cups Liberated: 847</span>
+                                <span>Security Incidents: 0</span>
+                                <span>Visitors Fed: 200+</span>
+                            </div>
+                            <p class="legend-story">The cafeteria had a Jell-O limit: two cups per person. Jell-O_Heist_Legend found this unacceptable. Over the course of a two-week vigil, they developed a Jell-O redistribution network that spanned three floors. Using a system of lookouts, decoy trays, and a modified wheelchair with hidden compartments, they ensured no caregiver went without their gelatinous comfort. The cafeteria staff knew. They let it happen. Everyone needs a hero.</p>
+                        </div>
+                    </div>
+
+                    <!-- Legend 9: Midnight_Receptionist -->
+                    <div class="legend-card">
+                        <button class="legend-header" aria-expanded="false">
+                            <span class="legend-rank">IX</span>
+                            <div class="legend-identity">
+                                <span class="legend-name">Midnight_Receptionist</span>
+                                <span class="legend-class">Threshold Guardian</span>
+                            </div>
+                            <span class="legend-toggle">▼</span>
+                        </button>
+                        <div class="legend-content" hidden>
+                            <div class="legend-stats">
+                                <span>Shift: Always Night</span>
+                                <span>Questions Answered: ∞</span>
+                                <span>Souls Guided: Countless</span>
+                            </div>
+                            <p class="legend-story">Every hospital has one. The receptionist who's somehow always there at 3 AM, no matter what day you arrive. They've seen everything. They know where every room is, which vending machine takes dollar coins, and which elevator makes the weird noise. They speak in riddles sometimes, but their riddles are always correct. Some say they've worked here for 40 years. HR has no record of them.</p>
+                        </div>
+                    </div>
+
+                    <!-- Legend 10: The Phantom Charger -->
+                    <div class="legend-card">
+                        <button class="legend-header" aria-expanded="false">
+                            <span class="legend-rank">X</span>
+                            <div class="legend-identity">
+                                <span class="legend-name">The Phantom Charger</span>
+                                <span class="legend-class">Tech Specter</span>
+                            </div>
+                            <span class="legend-toggle">▼</span>
+                        </button>
+                        <div class="legend-content" hidden>
+                            <div class="legend-stats">
+                                <span>Phones Saved: 2,000+</span>
+                                <span>Charger Types Carried: ALL</span>
+                                <span>Gratitude Received: Eternal</span>
+                            </div>
+                            <p class="legend-story">Your phone is at 2%. You're in hour 47. You've lost all hope. Then, from the shadows of the waiting room, a figure approaches. "What kind?" they ask. You tell them. They have it. They ALWAYS have it. USB-C, Lightning, micro-USB, that weird one Samsung used for two years—they have them all. They ask for nothing in return. They simply disappear, leaving behind only a full battery and the lingering scent of hospital coffee.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pantheon-footer">
+                <p>* These legends are eternal. Their sacrifices echo through the halls. Honor them by surviving your own vigil.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MOBILE DRAWER OVERLAY -->
+    <div class="drawer-overlay" id="drawer-overlay"></div>
+
+    <!-- MOBILE PROFILE DRAWER -->
+    <div class="mobile-drawer" id="profile-drawer" role="dialog" aria-modal="true" aria-label="Girlfriend Profile">
+        <div class="drawer-handle">
+            <div class="drawer-handle-bar"></div>
+        </div>
+        <button class="drawer-close-btn" id="close-profile-drawer" aria-label="Close drawer">✕</button>
+        <div class="drawer-content">
+            <div class="card-header">
+                <span class="header-icon">❤</span> GIRLFRIEND PROFILE
+            </div>
+            <div class="runner-profile">
+                <div class="runner-id">
+                    <div class="runner-name">STACEY</div>
+                    <div class="class-block">
+                        <div class="class-row">
+                            <span class="class-label">CLASS</span>
+                            <span class="class-value">🔮 Unlicensed WebMD Warlock</span>
+                        </div>
+                        <div class="class-divider"></div>
+                        <div class="subclass-row">
+                            <span class="subclass-label">SUBCLASS</span>
+                            <span class="subclass-value">Google Scholar (Panic Edition)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-matrix">
+                    <div class="stat-cell">
+                        <label>LOCATION</label>
+                        <div class="value">BEDSIDE (DAY 8)</div>
+                    </div>
+                    <div class="stat-cell">
+                        <label>HOURS AWAKE</label>
+                        <div class="value text-danger">UNKNOWN</div>
+                    </div>
+                    <div class="stat-cell">
+                        <label>THREAT LEVEL</label>
+                        <div class="value text-warning">SPICY</div>
+                    </div>
+                    <div class="stat-cell">
+                        <label>SANITY</label>
+                        <div class="value text-danger">12%</div>
+                    </div>
+                </div>
+
+                <div class="modifiers-block">
+                    <div class="mod-group">
+                        <h5>▲ ACTIVE BUFFS</h5>
+                        <div class="mod-list">
+                            <span class="mod-tag buff">💊 Vyvanse</span>
+                            <span class="mod-tag buff">⚡ 2x Monster</span>
+                            <span class="mod-tag buff">🧠 Hyperfocus</span>
+                            <span class="mod-tag buff">☢️ Spite</span>
+                        </div>
+                    </div>
+                    <div class="mod-group">
+                        <h5>▼ ACTIVE DEBUFFS</h5>
+                        <div class="mod-list">
+                            <span class="mod-tag debuff">😴 Sleep Debt</span>
+                            <span class="mod-tag debuff">💡 Fluor. Lights</span>
+                            <span class="mod-tag debuff">🔔 Ambient Beeping</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bio-section">
+                    <h5>📝 BIO</h5>
+                    <div class="bio-content">
+                        <p>Day 8. Sanity: 12%. Sleep: a rumor she's heard but can't verify. Stacey no longer checks the clock — she communes with it. Every unanswered call button strengthens her psychic powers. Every "we're monitoring it" adds another inch to her thousand-yard stare.</p>
+                        <p>She can smell hospital-grade gaslighting through three closed doors and has developed a facial expression best described as "if 'per my last email' had a face."</p>
+                        <p>Sustained entirely by hallway coffee, spite, and the dark art of relentless follow-up, she is now more vengeance than woman. Less patient, more haunting. Last week she made a resident cry. She doesn't remember doing it. She's choosing not to investigate.</p>
+                        <p class="bio-odds"><strong>Odds of discharge:</strong> [404 Error].<br><strong>Odds of her leaving before Aaron:</strong> cute that you'd ask.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MOBILE SCENARIOS DRAWER -->
+    <div class="mobile-drawer" id="scenarios-drawer" role="dialog" aria-modal="true" aria-label="Live Odds Board">
+        <div class="drawer-handle">
+            <div class="drawer-handle-bar"></div>
+        </div>
+        <button class="drawer-close-btn" id="close-scenarios-drawer" aria-label="Close drawer">✕</button>
+        <div class="drawer-content">
+            <div class="card-header">
+                <span class="header-icon">📊</span> LIVE ODDS BOARD
+                <span class="live-indicator">● LIVE</span>
+            </div>
+            <div class="odds-table-wrapper">
+                <div class="table-body" id="mobile-odds-body">
+                    <!-- JS Populated -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MOBILE BOTTOM NAV -->
+    <nav class="mobile-bottom-nav" aria-label="Mobile navigation">
+        <div class="nav-buttons">
+            <button class="nav-btn" id="nav-scenarios" aria-label="View scenarios">
+                <span class="nav-btn-icon">📊</span>
+                <span class="nav-btn-label">SCENARIOS</span>
+            </button>
+            <button class="nav-btn" id="nav-inventory" aria-label="View inventory">
+                <span class="nav-btn-icon">💼</span>
+                <span class="nav-btn-label">INVENTORY</span>
+            </button>
+            <button class="nav-btn" id="nav-profile" aria-label="View profile">
+                <span class="nav-btn-icon">👤</span>
+                <span class="nav-btn-label">PROFILE</span>
+            </button>
+            <button class="nav-btn" id="nav-info" aria-label="Why this exists">
+                <span class="nav-btn-icon">❓</span>
+                <span class="nav-btn-label">INFO</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- EXPLAINER TOOLTIP (positioned by JS) -->
+    <div class="explainer-tooltip" id="explainer-tooltip" role="tooltip">
+        <h4>WHY THIS EXISTS</h4>
+        <p>Because my boyfriend is in the hospital and the real world has become a bureaucratic RNG dungeon. Everything here is based on actual events that made me consider becoming a cryptid. This is how I cope. Welcome to the ride.</p>
+    </div>
+
+    <!-- REALPLAYER POPUP (Feature 18) -->
+    <div class="realplayer-overlay" id="realplayer-popup" role="dialog" aria-modal="true" aria-labelledby="realplayer-title">
+        <div class="realplayer-dialog">
+            <div class="realplayer-titlebar">
+                <span class="realplayer-icon">⚠️</span>
+                <span id="realplayer-title">Install RealPlayer?</span>
+                <button class="realplayer-close" onclick="closeRealPlayerPopup()" aria-label="Close">✕</button>
+            </div>
+            <div class="realplayer-content">
+                <p>This site requires <strong>RealPlayer™</strong> to experience maximum suffering.</p>
+                <p class="realplayer-features">RealPlayer will:</p>
+                <ul>
+                    <li>Buffer indefinitely</li>
+                    <li>Add 17 toolbar extensions</li>
+                    <li>Never fully uninstall</li>
+                </ul>
+            </div>
+            <div class="realplayer-buttons">
+                <button class="realplayer-btn primary" id="realplayer-install">INSTALL</button>
+                <button class="realplayer-btn" id="realplayer-later">ASK ME IN 900 MINUTES</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CLIPPY POPUP (Feature 21) -->
+    <div class="clippy-popup" id="clippy-popup" role="complementary" aria-label="Clippy assistant">
+        <div class="clippy-content">
+            <div class="clippy-icon">📎</div>
+            <div class="clippy-speech">
+                <p>"It looks like you're trying to cope with medical trauma!</p>
+                <p>Would you like me to:</p>
+                <ul>
+                    <li>Make it worse</li>
+                    <li>Pretend to help</li>
+                    <li>Disappear forever <em>(recommended)</em></li>
+                </ul>
+            </div>
+        </div>
+        <button class="clippy-dismiss" id="clippy-dismiss">Go Away, Clippy</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
