@@ -102,6 +102,7 @@ const SCENARIO_ICONS = {
 // HOSPITAL CHAOS LOADING MESSAGES
 // ============================================
 const LOADING_MESSAGES = [
+    // ORIGINAL
     "Consulting Nurse RNG…",
     "Waiting on Doctor Response… (ETA: ±900 minutes)",
     "Insurance system is thinking…",
@@ -115,7 +116,35 @@ const LOADING_MESSAGES = [
     "Decoding the discharge summary…",
     "Calculating co-pay anxiety…",
     "Loading cafeteria menu (conceptual)…",
-    "Syncing with hospital WiFi (attempt 47)…"
+    "Syncing with hospital WiFi (attempt 47)…",
+    
+    // LIMEWIRE EASTER EGGS (already present)
+    "Downloading Hope.mp3 from LimeWire... (47 hours remaining)",
+    "Buffering via RealPlayer... please wait...",
+    "Your download will complete in approximately: ∞",
+    "Searching Kazaa for 'medical_miracle.exe'...",
+    
+    // NEW ADDITIONS
+    "The hospitalist is 'rounding.' This means nothing.",
+    "Checking if the attending has read the chart yet... (they haven't)",
+    "Calculating the probability that 'soon' means today...",
+    "Waiting for someone to acknowledge the call button...",
+    "The discharge paperwork is 'in process.' It has been 'in process' for 72 hours.",
+    "Asking the nurse a question she's already answered twice...",
+    "Insurance is 'reviewing.' This could mean anything.",
+    "The doctor is 'on their way.' This is technically always true.",
+    "Refreshing the patient portal... (no new information, as expected)",
+    "Locating the one person who actually knows what's happening...",
+    "Waiting for a callback that was promised 'within the hour' six hours ago...",
+    "Checking if 'stable' means 'good' or just 'not actively dying'...",
+    "The system is experiencing delays. The system is always experiencing delays.",
+    "Translating 'we're monitoring it' into actionable information... (failed)",
+    "Verifying that the labs were actually ordered and not just 'ordered'...",
+    "Paging the attending... (results may vary)",
+    "The specialist will 'swing by.' No timeframe was given. None will be.",
+    "Confirming that someone, somewhere, has a plan...",
+    "Loading results that will raise more questions than they answer...",
+    "Checking if the pharmacy received the order... (they did not)"
 ];
 
 // ============================================
@@ -141,38 +170,138 @@ const walletData = [
         category: "💩 Shitcoins",
         categoryId: "shitcoins",
         items: [
-            { name: "$HAMPSTRDANCE", amount: "420", id: "hampster" },
-            { name: "$LOLCAT", amount: "69", id: "lolcat" },
-            { name: "$YOLO", amount: "1337", id: "yolo" },
-            { name: "$ONFLEEK", amount: "88", id: "onfleek" },
-            { name: "$GOTMILK", amount: "2000", id: "gotmilk" },
-            { name: "$JUICYCOUTURE", amount: "777", id: "juicy" },
-            { name: "$TIGERKING", amount: "365", id: "tiger" },
-            { name: "$QUIETQUIT", amount: "42", id: "quietquit" }
+            {
+                name: "$HAMPSTRDANCE",
+                amount: "420",
+                id: "hampster",
+                lore: "Minted in 1999. Still buffering. This relic of the early internet represents peak human achievement: a hamster dancing to a sped-up song about being in love. Current status: emotionally attached, financially worthless. Cannot be sold. Will not be sold. The dance continues eternally."
+            },
+            {
+                name: "$LOLCAT",
+                amount: "69",
+                id: "lolcat",
+                lore: "I CAN HAZ EMOTIONAL STABILITY? (No. No you cannot.) This memecoin is backed by the full faith and credit of cats who cannot spell. Guaranteed to provide exactly zero utility but infinite nostalgic serotonin. Use responsibly. Or don't. The cat doesn't care."
+            },
+            {
+                name: "$YOLO",
+                amount: "1337",
+                id: "yolo",
+                lore: "Drake said it first. You said it while making a terrible financial decision in 2014. Now it's a currency. The circle of life. Warning: Every transaction triggers a memory of that one time you did that thing you still cringe about at 3 AM. Non-refundable."
+            },
+            {
+                name: "$ONFLEEK",
+                amount: "88",
+                id: "onfleek",
+                lore: "Your eyebrows called. They want 2015 back. This coin peaked exactly one summer and has been in gradual decline ever since—much like the phrase itself. Current holders include: millennials in denial, ironic Gen-Z investors, and one very confused boomer."
+            },
+            {
+                name: "$GOTMILK",
+                amount: "2000",
+                id: "gotmilk",
+                lore: "Sponsored by the dairy industry's most aggressive marketing campaign. Every transaction includes a phantom milk mustache and vague guilt about calcium intake. Side effects may include: 90s nostalgia, lactose contemplation, and suddenly wanting cookies. Not valid with almond milk."
+            },
+            {
+                name: "$JUICYCOUTURE",
+                amount: "777",
+                id: "juicy",
+                lore: "Velour-backed currency. Best viewed on low-rise jeans while shopping at the mall with your friends. This coin carries the spiritual energy of 2003—when Paris Hilton was queen and rhinestones were a personality. Warning: May spontaneously spell 'JUICY' across your assets."
+            },
+            {
+                name: "$TIGERKING",
+                amount: "365",
+                id: "tiger",
+                lore: "That b*tch Carole Baskin won't take these. Minted during the collective fever dream of March 2020, this coin represents humanity's descent into madness. Each token contains trace amounts of chaos energy, mullet essence, and poor decision-making. Never financially recovered from this."
+            },
+            {
+                name: "$QUIETQUIT",
+                amount: "42",
+                id: "quietquit",
+                lore: "The official currency of doing the bare minimum. This coin generates passive income by simply existing—it refuses to go above and beyond. Staking rewards are 'whatever.' Mining requires exactly zero effort. Perfect for when you've mentally checked out but still need the direct deposit."
+            }
         ]
     },
     {
         category: "🖼️ Premium NFTs",
         categoryId: "premium-nfts",
         items: [
-            { name: "Diamond Hands NFT", amount: "2", id: "diamond" },
-            { name: "WSB Member Jacket", amount: "1", id: "wsb" },
-            { name: "Blockbuster Late Fee", amount: "3", id: "block" },
-            { name: "AOL Install CD", amount: "1", id: "aol" }
+            {
+                name: "Diamond Hands NFT",
+                amount: "2",
+                id: "diamond",
+                lore: "You're not selling. You're NEVER selling. Even when it's down 99%. Even when your family stages an intervention. These hands are DIAMONDS and they are HOLDING. This NFT grants the bearer immunity to rational investment advice and the ability to convince themselves that any loss is temporary. Comes with a complimentary bag to hold."
+            },
+            {
+                name: "WSB Member Jacket",
+                amount: "1",
+                id: "wsb",
+                lore: "Smells like loss porn and rocket fuel. 🚀🚀🚀 This vintage garment was worn during the Great GME Squeeze of '21 and still carries the energy of a million 'apes together strong' comments. Dry clean only. Cannot be removed during market hours. Pairs well with Wendy's applications and excessive optimism."
+            },
+            {
+                name: "Blockbuster Late Fee",
+                amount: "3",
+                id: "block",
+                lore: "From 1998. They're still looking for you. This ancient debt has achieved sentience and now exists purely to haunt you. Worth approximately $4.50 in late fees that have compounded into a spiritual burden. Cannot be returned. The store doesn't exist. But the guilt? The guilt is eternal. 'Be Kind, Rewind' was just a suggestion you failed."
+            },
+            {
+                name: "AOL Install CD",
+                amount: "1",
+                id: "aol",
+                lore: "1000 FREE HOURS! (You'll need them all for one webpage.) This perfectly preserved artifact contains the sound of dial-up internet—that beautiful screaming robot noise that meant your mom couldn't use the phone. Collectors note: Every 90s household had 47 of these. You are not special for having one. But you ARE nostalgic."
+            }
         ]
     },
     {
         category: "🗑️ Garbage NFTs",
         categoryId: "garbage-nfts",
         items: [
-            { name: "Haunted Tamagotchi", amount: "2", id: "tama" },
-            { name: "MySpace Top 8 Slot", amount: "1", id: "myspace" },
-            { name: "FuncoLand Loyalty Card", amount: "1", id: "funco" },
-            { name: "Circuit City Gift Card", amount: "$0.37", id: "circuit" },
-            { name: "1998 Surge (Cursed)", amount: "½", id: "surge" },
-            { name: "I ❤️ 80s Leg Warmers", amount: "1", id: "legs" },
-            { name: "Geocities GIF", amount: "1", id: "geo" },
-            { name: "Laser School Photo", amount: "1", id: "laser" }
+            {
+                name: "Haunted Tamagotchi",
+                amount: "2",
+                id: "tama",
+                lore: "It died in 1997. It's still beeping. You forgot to feed it ONE TIME and now its pixelated ghost haunts your dreams. Current mood: resentful. Hunger level: eternal. This cursed device remembers every neglect. Every unfed moment. It will outlive you out of spite. The beeping never stops. It just goes somewhere you can't hear. Yet."
+            },
+            {
+                name: "MySpace Top 8 Slot",
+                amount: "1",
+                id: "myspace",
+                lore: "Tom is still in yours. Will he ever leave? The emotional weight of ranking your friends publicly scarred a generation. This slot represents pure social currency from an era when your profile song choice MEANT something. Current occupant: A friend you haven't spoken to since 2007 but feel too guilty to remove. Status: Complicated."
+            },
+            {
+                name: "FuncoLand Loyalty Card",
+                amount: "1",
+                id: "funco",
+                lore: "Trade-in value: 47 cents for your soul. This faded plastic rectangle represents every childhood game you traded for pennies, now worth hundreds. The employee who gave you $3 for Chrono Trigger is currently living rent-free in your head. Rewards points expired in 1999. Regret compounds daily."
+            },
+            {
+                name: "Circuit City Gift Card",
+                amount: "$0.37",
+                id: "circuit",
+                lore: "Cannot be redeemed anywhere. Not even the afterlife. This perfectly useless rectangle contains just enough value to be annoying and not enough to matter. The store closed in 2009. The gift card remains. A monument to optimism. A testament to procrastination. Thirty-seven cents of permanent regret."
+            },
+            {
+                name: "1998 Surge (Cursed)",
+                amount: "½",
+                id: "surge",
+                lore: "It's been in your grandma's basement since Clinton was president. Probably sentient by now. The neon green color has achieved consciousness. Scientists refuse to study it. The cap is fused shut but something inside still moves. Nutritional information: CLASSIFIED. Drink at your own risk. We are not responsible for mutations."
+            },
+            {
+                name: "I ❤️ 80s Leg Warmers",
+                amount: "1",
+                id: "legs",
+                lore: "Worn ironically. Now stuck permanently. These fluorescent tubes of regret were purchased for a theme party and have since bonded with your calves at a molecular level. Attempts at removal have failed. You've stopped trying. Your legs are warm now. They will always be warm. This is your life."
+            },
+            {
+                name: "Geocities GIF",
+                amount: "1",
+                id: "geo",
+                lore: "Under construction since 1996. 🚧 This animated masterpiece has been building for nearly 30 years. The dancing baby within grows stronger. The 'Under Construction' sign is load-bearing—remove it and the internet collapses. Hosted on a server running on pure nostalgia and a Pentium II processor that refuses to die."
+            },
+            {
+                name: "Laser School Photo",
+                amount: "1",
+                id: "laser",
+                lore: "Yes, you chose the laser background. Yes, your mom still has it framed. No, you cannot destroy all copies—they regenerate. This photograph captures you at peak awkward: bad haircut, worse smile, surrounded by beams of pure 90s energy. The photographer knew. The photographer always knew. This was the best possible outcome."
+            }
         ]
     }
 ];
@@ -207,8 +336,8 @@ const scenarios = [
             "You still believe the doctors when they give timeframes"
         ],
         outcomes: [
-            "Still using complete sentences",
-            "Maintains regular eating schedule",
+            "Capable of answering 'how are you' without laughing bitterly",
+            "Still recognizes hunger as a distinct sensation rather than background noise",
             "Knows what day of the week it is",
             "Has not yet threatened any medical equipment"
         ]
@@ -251,7 +380,7 @@ const scenarios = [
     {
         hours: "43-63",
         name: "The Yeeting Threshold",
-        description: "Odds of maintaining composure: 41% — Equipment has begun to feel like it's taunting you personally.",
+        description: "Odds of maintaining composure: 41% — The IV pump knows what it did.",
         odds: "7/1",
         payout: "5 $YOLO + 1 Haunted Tamagotchi",
         symptoms: [
@@ -360,8 +489,8 @@ const scenarios = [
         odds: "3/1",
         payout: "Entire Beanie Baby Collection",
         symptoms: [
-            "You develop the ability to talk in metaphors so deep the staff takes notes without knowing why",
-            "You acquire the stealth powers of a raccoon in a Taco Bell dumpster — appearing and disappearing at will",
+            "You describe the discharge process as trying to escape a corn maze designed by someone who hates you, except the corn is paperwork and the exit keeps moving. Three people overhear this. One of them is crying. You don't know if it's laughter or recognition. Possibly both.",
+            "You've learned to move through the hospital without being seen by anyone who might ask you a question. You know which hallways are empty at which hours. You know which stairwell the residents avoid. You once walked past the same nurse three times in ten minutes and she didn't register your presence. You have become infrastructure.",
             "Your sense of time has shattered completely. 'Yesterday' and 'next week' are the same moment now.",
             "You achieve hyperfocus so intense you can hear patterns in the beeping machines. They're trying to communicate.",
             "CHAOS ENERGY LEVEL: OVER 9000. The attending physician asks for your opinion on a case. You're right."
@@ -407,7 +536,7 @@ const scenarios = [
             "Energy no longer comes from caffeine. It comes from somewhere deeper. Possibly spite. Possibly love. Probably both."
         ],
         duringCrash: [
-            "THERE IS NO CRASH IN OVERLORD MODE",
+            "The crash sent a calendar invite. You declined it. It hasn't rescheduled.",
             "You've moved beyond the concept of 'tired' into a state that doesn't have a name yet",
             "Medical science cannot explain why you're still functioning. You don't explain it either."
         ],
