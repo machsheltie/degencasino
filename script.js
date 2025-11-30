@@ -730,9 +730,7 @@ function getBetDuration(hoursString) {
 }
 
 function createActiveBet(scenario, scenarioIndex, assetName, assetId, wagerAmount) {
-    console.log('createActiveBet called:', scenario.name, assetName, wagerAmount);
     const duration = getBetDuration(scenario.hours);
-    console.log('Bet duration:', duration, 'for hours:', scenario.hours);
     const bet = {
         id: Date.now() + Math.random(), // Ensure unique ID
         asset: assetName,
@@ -1220,12 +1218,7 @@ function renderActiveBets() {
     const countEl = document.getElementById('active-bets-count');
     const panel = document.getElementById('active-bets-panel');
 
-    console.log('renderActiveBets called, activeBets:', activeBets.length, 'panel:', panel, 'container:', container);
-
-    if (!container) {
-        console.warn('active-bets-list container not found!');
-        return;
-    }
+    if (!container) return;
 
     if (countEl) countEl.textContent = activeBets.length;
 
@@ -1233,9 +1226,6 @@ function renderActiveBets() {
     if (panel) {
         const shouldShow = activeBets.length > 0;
         panel.style.display = shouldShow ? 'block' : 'none';
-        console.log('Panel display set to:', shouldShow ? 'block' : 'none');
-    } else {
-        console.warn('active-bets-panel element not found!');
     }
 
     if (activeBets.length === 0) {

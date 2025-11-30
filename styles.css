@@ -3511,13 +3511,15 @@ body.reduce-motion .bet-result-modal.win .bet-result-content::before {
     max-width: 1100px;
     margin: 20px auto;
     padding: 0 20px;
+    position: relative;
+    z-index: 50;
 }
 
 .active-bets-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: var(--bg-dark-green);
+    background: var(--bg-green);
     padding: 12px 20px;
     border: 2px solid var(--accent-gold);
     border-bottom: none;
@@ -3539,7 +3541,7 @@ body.reduce-motion .bet-result-modal.win .bet-result-content::before {
 
 .active-bets-count {
     background: var(--accent-gold);
-    color: var(--bg-dark-green);
+    color: var(--bg-green);
     font-family: var(--font-body);
     font-weight: 700;
     font-size: 0.9rem;
@@ -3568,7 +3570,7 @@ body.reduce-motion .bet-result-modal.win .bet-result-content::before {
 }
 
 .active-bet-item {
-    background: var(--bg-dark-green);
+    background: var(--bg-green);
     border: 2px solid var(--accent-gold);
     padding: 12px 16px;
     display: flex;
