@@ -106,6 +106,9 @@
 
 .waiver-body li {
     margin-bottom: 10px;
+}
+
+.waiver-body ol li {
     font-weight: 700;
 }
 
