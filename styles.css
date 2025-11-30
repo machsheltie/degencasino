@@ -3591,24 +3591,26 @@ body.reduce-motion .bet-result-modal.win .bet-result-content::before {
 .active-bet-item .bet-scenario {
     font-family: var(--font-body);
     font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--bg-parchment);
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .active-bet-item .bet-asset {
     font-family: var(--font-body);
     font-size: 0.85rem;
-    color: var(--bg-dark-green);
-    font-weight: 600;
-    background: var(--accent-gold);
-    padding: 2px 8px;
+    color: #0a2f15;
+    font-weight: 700;
+    background: #d4af37;
+    padding: 4px 10px;
     border-radius: 4px;
 }
 
 .active-bet-item .bet-odds {
     font-family: var(--font-body);
-    font-size: 0.8rem;
-    color: rgba(240, 230, 210, 0.8);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #d4af37;
 }
 
 .bet-timer-container {
