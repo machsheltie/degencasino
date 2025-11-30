@@ -106,10 +106,7 @@
 
 .waiver-body li {
     margin-bottom: 10px;
-}
-
-.waiver-body ol li {
-    font-weight: 700;
+    font-weight: normal;
 }
 
 .waiver-btn {
