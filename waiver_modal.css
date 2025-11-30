@@ -27,11 +27,15 @@
     border: 8px double var(--accent-gold);
     width: 100%;
     max-width: 500px;
+    max-height: 90vh;
     padding: 40px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
     position: relative;
     transform: translateY(20px);
     transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
 .waiver-overlay.active .waiver-modal {
@@ -44,6 +48,7 @@
     padding-bottom: 20px;
     margin-bottom: 20px;
     position: relative;
+    flex-shrink: 0;
 }
 
 .waiver-header h2 {
@@ -74,6 +79,9 @@
     font-size: 0.95rem;
     color: #333;
     line-height: 1.6;
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 10px;
 }
 
 .waiver-body p {
@@ -114,6 +122,8 @@
     transition: all 0.2s;
     text-transform: uppercase;
     letter-spacing: 1px;
+    flex-shrink: 0;
+    margin-top: 20px;
 }
 
 .waiver-btn:hover {
