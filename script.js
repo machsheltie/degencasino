@@ -1231,7 +1231,11 @@ function renderActiveBets() {
 
     // Show/hide panel based on active bets
     if (panel) {
-        panel.style.display = activeBets.length > 0 ? 'block' : 'none';
+        const shouldShow = activeBets.length > 0;
+        panel.style.display = shouldShow ? 'block' : 'none';
+        console.log('Panel display set to:', shouldShow ? 'block' : 'none');
+    } else {
+        console.warn('active-bets-panel element not found!');
     }
 
     if (activeBets.length === 0) {
