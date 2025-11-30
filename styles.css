@@ -3686,3 +3686,550 @@ body.reduce-motion .bet-result-modal.win .bet-result-content::before {
         transition: none;
     }
 }
+
+/* ============================================
+   COMPREHENSIVE MOBILE RESPONSIVE STYLES
+   ============================================ */
+
+/* MOBILE: <= 480px (Small phones) */
+@media (max-width: 480px) {
+    /* Header optimizations */
+    .racing-header {
+        grid-template-columns: 1fr auto;
+        gap: 0;
+    }
+
+    .brand-block {
+        padding: 8px 12px;
+    }
+
+    .brand-logo {
+        font-size: 1.1rem;
+    }
+
+    .brand-sub {
+        font-size: 0.55rem;
+        letter-spacing: 0.5px;
+    }
+
+    .wallet-trigger {
+        padding: 0 12px;
+    }
+
+    .trigger-label {
+        font-size: 0.6rem;
+    }
+
+    .trigger-icon {
+        font-size: 0.7rem;
+    }
+
+    .info-trigger {
+        width: 20px;
+        height: 20px;
+        font-size: 0.7rem;
+        margin-left: 6px;
+    }
+
+    /* Ticket Modal */
+    .ticket-modal {
+        max-width: 100%;
+        max-height: 95vh;
+        border-width: 2px;
+    }
+
+    .ticket-header {
+        padding: 15px;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .ticket-title-block h2 {
+        font-size: 1.2rem;
+    }
+
+    .ticket-meta {
+        font-size: 0.8rem;
+        padding: 3px 8px;
+    }
+
+    .ticket-odds-block {
+        text-align: left;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .big-odds {
+        font-size: 2rem;
+    }
+
+    .ticket-desc {
+        font-size: 0.8rem;
+        max-width: none;
+        margin-top: 0;
+    }
+
+    .ticket-body {
+        padding: 15px;
+    }
+
+    .detail-section {
+        margin-bottom: 18px;
+    }
+
+    .detail-section h4 {
+        font-size: 0.9rem;
+    }
+
+    .detail-section li {
+        font-size: 0.85rem;
+        padding-left: 16px;
+    }
+
+    .wager-section {
+        padding: 15px;
+    }
+
+    .wager-header {
+        font-size: 0.9rem;
+    }
+
+    .wager-asset-display {
+        padding: 10px 12px;
+        font-size: 0.85rem;
+    }
+
+    .wager-amount-row {
+        gap: 8px;
+    }
+
+    .wager-amount-row label {
+        font-size: 0.8rem;
+    }
+
+    .wager-adjust {
+        width: 32px;
+        font-size: 1rem;
+    }
+
+    .wager-input {
+        width: 50px;
+        font-size: 0.9rem;
+    }
+
+    .wager-max {
+        font-size: 0.75rem;
+    }
+
+    .ticket-actions {
+        padding: 15px;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .bet-btn {
+        width: 100%;
+        font-size: 1.1rem;
+        padding: 12px 20px;
+    }
+
+    .cancel-btn {
+        width: 100%;
+        padding: 10px 20px;
+    }
+
+    /* Toast */
+    .toast {
+        left: 10px;
+        right: 10px;
+        bottom: 70px;
+        padding: 15px 20px;
+    }
+
+    .toast-icon {
+        font-size: 1.5rem;
+    }
+
+    .toast-title {
+        font-size: 0.85rem;
+    }
+
+    .toast-message {
+        font-size: 0.85rem;
+    }
+
+    /* Footer */
+    .vintage-footer {
+        padding: 20px 15px 90px;
+    }
+
+    .disclaimer-quote {
+        font-size: 0.75rem;
+        line-height: 1.5;
+    }
+
+    .disclaimer-fineprint {
+        font-size: 0.7rem;
+    }
+
+    /* Active bets */
+    .active-bets-panel {
+        padding: 0 8px;
+        margin-bottom: 80px;
+    }
+
+    .active-bets-header h3 {
+        font-size: 0.9rem;
+    }
+
+    .active-bet-item .bet-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .active-bet-item .bet-scenario {
+        font-size: 0.8rem;
+    }
+
+    .active-bet-item .bet-odds {
+        font-size: 0.75rem;
+    }
+
+    /* Bet banner */
+    .bet-banner {
+        padding: 10px 12px;
+    }
+
+    .bet-banner-icon {
+        font-size: 1.2rem;
+    }
+
+    .bet-banner-text {
+        font-size: 0.75rem;
+        line-height: 1.4;
+    }
+
+    /* Mobile nav */
+    .nav-btn-icon {
+        font-size: 1.1rem;
+    }
+
+    .nav-btn-label {
+        font-size: 0.5rem;
+    }
+
+    /* Wallet drawer */
+    .drawer-inner {
+        padding: 12px 15px 25px;
+    }
+
+    .drawer-header h3 {
+        font-size: 1.2rem;
+    }
+
+    .close-btn {
+        font-size: 0.7rem;
+        padding: 4px 10px;
+    }
+
+    .wallet-category-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .wallet-item {
+        padding: 12px;
+    }
+
+    .item-name {
+        font-size: 0.75rem;
+    }
+
+    .item-amount {
+        font-size: 0.95rem;
+    }
+
+    /* Pantheon */
+    .pantheon-panel {
+        max-height: 90vh;
+        margin: 0 5px;
+    }
+
+    .pantheon-header h2 {
+        font-size: 1.1rem;
+    }
+
+    .pantheon-subtitle {
+        font-size: 0.65rem;
+    }
+
+    .legend-name {
+        font-size: 0.85rem;
+    }
+
+    .legend-class {
+        font-size: 0.65rem;
+    }
+
+    .legend-story {
+        font-size: 0.8rem;
+    }
+
+    /* Drawers */
+    .mobile-drawer {
+        height: 90vh;
+    }
+
+    .mobile-drawer .runner-profile {
+        padding: 15px;
+    }
+
+    .runner-name {
+        font-size: 1.4rem;
+    }
+
+    .class-value {
+        font-size: 0.6rem;
+        padding: 5px 10px 5px 14px;
+    }
+
+    .subclass-value {
+        font-size: 0.6rem;
+    }
+
+    .stats-matrix {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .stat-cell label {
+        font-size: 0.6rem;
+    }
+
+    .stat-cell .value {
+        font-size: 0.75rem;
+    }
+
+    .mod-tag {
+        font-size: 0.7rem;
+        padding: 4px 8px;
+    }
+
+    .bio-section h5 {
+        font-size: 0.8rem;
+    }
+
+    .bio-content p {
+        font-size: 0.8rem;
+    }
+}
+
+/* TABLET: 481px - 768px */
+@media (min-width: 481px) and (max-width: 768px) {
+    /* Header */
+    .brand-logo {
+        font-size: 1.3rem;
+    }
+
+    .brand-sub {
+        font-size: 0.6rem;
+    }
+
+    .wallet-trigger {
+        padding: 0 18px;
+    }
+
+    /* Ticket Modal */
+    .ticket-modal {
+        max-width: 95%;
+    }
+
+    .ticket-header {
+        padding: 20px;
+    }
+
+    .ticket-title-block h2 {
+        font-size: 1.4rem;
+    }
+
+    .big-odds {
+        font-size: 2.5rem;
+    }
+
+    .ticket-body {
+        padding: 20px;
+    }
+
+    /* Active bets */
+    .active-bets-panel {
+        margin-bottom: 80px;
+    }
+
+    /* Footer */
+    .vintage-footer {
+        padding-bottom: 100px;
+    }
+
+    /* Wallet drawer */
+    .wallet-category-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* TABLET LANDSCAPE / SMALL DESKTOP: 769px - 1024px */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .racing-form-grid {
+        grid-template-columns: 320px 1fr;
+        gap: 20px;
+        padding: 0 15px;
+    }
+
+    .brand-logo {
+        font-size: 1.5rem;
+    }
+
+    .runner-profile {
+        padding: 20px;
+    }
+
+    .ticket-modal {
+        max-width: 700px;
+    }
+
+    .wallet-category-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* LANDSCAPE MOBILE ORIENTATION FIX */
+@media (max-height: 500px) and (orientation: landscape) {
+    .mobile-drawer {
+        height: 100vh;
+        border-radius: 0;
+    }
+
+    .waiver-modal {
+        max-height: 100vh;
+        padding: 20px;
+    }
+
+    .waiver-body {
+        max-height: calc(100vh - 150px);
+    }
+
+    .ticket-modal {
+        max-height: 100vh;
+    }
+
+    .pantheon-panel {
+        max-height: 100vh;
+    }
+
+    /* Disable bottom nav in landscape to give more space */
+    .mobile-bottom-nav {
+        height: 50px;
+    }
+
+    .nav-btn-label {
+        display: none;
+    }
+
+    .nav-btn-icon {
+        font-size: 1.4rem;
+    }
+}
+
+/* HIGH DPI / RETINA DISPLAY ADJUSTMENTS */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .texture-overlay {
+        opacity: 0.25;
+    }
+}
+
+/* SAFE AREA INSETS FOR NOTCHED DEVICES */
+@supports (padding: max(0px)) {
+    .mobile-bottom-nav {
+        padding-bottom: max(0px, env(safe-area-inset-bottom));
+        height: calc(60px + max(0px, env(safe-area-inset-bottom)));
+    }
+
+    .vintage-footer {
+        padding-bottom: calc(90px + max(0px, env(safe-area-inset-bottom)));
+    }
+
+    .mobile-drawer {
+        padding-bottom: max(0px, env(safe-area-inset-bottom));
+    }
+
+    .toast {
+        bottom: calc(80px + max(0px, env(safe-area-inset-bottom)));
+    }
+}
+
+/* TOUCH OPTIMIZATION */
+@media (pointer: coarse) {
+    /* Increase touch targets */
+    .nav-btn {
+        min-height: 48px;
+    }
+
+    .wallet-item {
+        min-height: 60px;
+    }
+
+    .table-row {
+        min-height: 60px;
+    }
+
+    .legend-header {
+        min-height: 56px;
+    }
+
+    .wager-adjust {
+        width: 44px;
+        min-height: 44px;
+    }
+
+    /* Disable hover effects on touch */
+    .wallet-item:hover {
+        transform: none;
+    }
+
+    .nav-btn:hover {
+        background: transparent;
+    }
+
+    /* Active states for touch feedback */
+    .wallet-item:active {
+        transform: scale(0.98);
+        background: var(--bg-parchment-dark);
+    }
+
+    .table-row:active {
+        background: rgba(212, 175, 55, 0.2);
+    }
+
+    .legend-header:active {
+        background: rgba(212, 175, 55, 0.1);
+    }
+}
+
+/* FIX FOR iOS MOMENTUM SCROLL */
+.drawer-content,
+.waiver-body,
+.ticket-body,
+.pantheon-body,
+.wallet-drawer.open {
+    -webkit-overflow-scrolling: touch;
+}
+
+/* PREVENT TEXT SIZE ADJUSTMENTS ON ORIENTATION CHANGE */
+html {
+    -webkit-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
