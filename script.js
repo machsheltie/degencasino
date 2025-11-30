@@ -50,6 +50,7 @@ const CONFIG = {
     CONFETTI_CLEANUP_DELAY: 2000,
     BET_BANNER_DURATION: 4000,
     MIN_LOADING_DISPLAY: 800,
+    BET_RESOLUTION_DELAY: 1500,
 
     // Confetti settings
     CONFETTI_COUNT: 30,
@@ -65,6 +66,30 @@ const CONFIG = {
     // LocalStorage keys
     STORAGE_WAIVER_KEY: 'degen_waiver_signed',
     STORAGE_MOTION_KEY: 'reduce-motion',
+    STORAGE_WALLET_KEY: 'degen_wallet_state',
+    STORAGE_STATS_KEY: 'degen_bet_stats',
+    STORAGE_HISTORY_KEY: 'degen_bet_history',
+    STORAGE_ACTIVE_BETS_KEY: 'degen_active_bets',
+
+    // Bet history settings
+    MAX_BET_HISTORY: 50, // Keep last 50 bets
+    MAX_ACTIVE_BETS: 5, // Maximum concurrent active bets
+
+    // Betting settings
+    WIN_PROBABILITY_MODIFIER: 1.0, // Adjust to make wins easier/harder (1.0 = fair odds)
+
+    // Bet resolution timing (milliseconds) - mapped to scenario hours
+    BET_DURATIONS: {
+        '1-21': 15000,     // 15 seconds
+        '22-42': 20000,    // 20 seconds
+        '43-63': 25000,    // 25 seconds
+        '64-84': 30000,    // 30 seconds
+        '85-105': 35000,   // 35 seconds
+        '106-126': 40000,  // 40 seconds
+        '127-147': 45000,  // 45 seconds
+        '148-168': 60000   // 60 seconds (finale)
+    },
+    DEFAULT_BET_DURATION: 30000,
 
     // CSS classes
     CLASS_ACTIVE: 'active',
@@ -607,6 +632,428 @@ let selectedCurrencyData = null; // Full asset data including category and max a
 let selectedScenario = null;
 let wagerAmount = 1;
 
+// ============================================
+// WALLET STATE MANAGEMENT (Persistent)
+// ============================================
+// Deep clone walletData for mutable state, or load from localStorage
+let walletState = loadWalletState();
+let betStats = loadBetStats();
+let betHistory = loadBetHistory();
+let activeBets = loadActiveBets();
+
+function loadWalletState() {
+    const saved = localStorage.getItem(CONFIG.STORAGE_WALLET_KEY);
+    if (saved) {
+        try {
+            return JSON.parse(saved);
+        } catch (e) {
+            console.warn('Failed to parse wallet state, using defaults');
+        }
+    }
+    // Deep clone the original walletData
+    return JSON.parse(JSON.stringify(walletData));
+}
+
+function loadBetStats() {
+    const saved = localStorage.getItem(CONFIG.STORAGE_STATS_KEY);
+    if (saved) {
+        try {
+            return JSON.parse(saved);
+        } catch (e) {
+            console.warn('Failed to parse bet stats, using defaults');
+        }
+    }
+    return {
+        totalBets: 0,
+        wins: 0,
+        losses: 0,
+        biggestWin: null,
+        currentStreak: 0,
+        bestStreak: 0
+    };
+}
+
+function saveWalletState() {
+    localStorage.setItem(CONFIG.STORAGE_WALLET_KEY, JSON.stringify(walletState));
+}
+
+function saveBetStats() {
+    localStorage.setItem(CONFIG.STORAGE_STATS_KEY, JSON.stringify(betStats));
+}
+
+function loadBetHistory() {
+    const saved = localStorage.getItem(CONFIG.STORAGE_HISTORY_KEY);
+    if (saved) {
+        try {
+            return JSON.parse(saved);
+        } catch (e) {
+            console.warn('Failed to parse bet history, using empty array');
+        }
+    }
+    return [];
+}
+
+function saveBetHistory() {
+    // Keep only the last MAX_BET_HISTORY bets
+    if (betHistory.length > CONFIG.MAX_BET_HISTORY) {
+        betHistory = betHistory.slice(-CONFIG.MAX_BET_HISTORY);
+    }
+    localStorage.setItem(CONFIG.STORAGE_HISTORY_KEY, JSON.stringify(betHistory));
+}
+
+function addToBetHistory(bet) {
+    betHistory.push(bet);
+    saveBetHistory();
+}
+
+// ============================================
+// ACTIVE BETS MANAGEMENT (Timer-based)
+// ============================================
+function loadActiveBets() {
+    const saved = localStorage.getItem(CONFIG.STORAGE_ACTIVE_BETS_KEY);
+    if (saved) {
+        try {
+            return JSON.parse(saved);
+        } catch (e) {
+            console.warn('Failed to parse active bets, using empty array');
+        }
+    }
+    return [];
+}
+
+function saveActiveBets() {
+    localStorage.setItem(CONFIG.STORAGE_ACTIVE_BETS_KEY, JSON.stringify(activeBets));
+}
+
+function getBetDuration(hoursString) {
+    return CONFIG.BET_DURATIONS[hoursString] || CONFIG.DEFAULT_BET_DURATION;
+}
+
+function createActiveBet(scenario, scenarioIndex, assetName, assetId, wagerAmount) {
+    const duration = getBetDuration(scenario.hours);
+    const bet = {
+        id: Date.now() + Math.random(), // Ensure unique ID
+        asset: assetName,
+        assetId: assetId,
+        amount: wagerAmount,
+        scenarioIndex: scenarioIndex,
+        scenarioName: scenario.name,
+        hours: scenario.hours,
+        odds: scenario.odds,
+        payout: scenario.payout,
+        placedAt: Date.now(),
+        resolvesAt: Date.now() + duration,
+        status: 'active'
+    };
+
+    activeBets.push(bet);
+    saveActiveBets();
+    renderActiveBets();
+
+    // Schedule resolution
+    scheduleBetResolution(bet);
+
+    return bet;
+}
+
+function scheduleBetResolution(bet) {
+    const timeUntilResolve = Math.max(0, bet.resolvesAt - Date.now());
+
+    setTimeout(() => {
+        resolveBet(bet.id);
+    }, timeUntilResolve);
+}
+
+function resolveBet(betId) {
+    const betIndex = activeBets.findIndex(b => b.id === betId);
+    if (betIndex === -1) return;
+
+    const bet = activeBets[betIndex];
+    if (bet.status !== 'active') return;
+
+    // Determine outcome based on odds
+    const isWin = determineBetOutcomeFromOdds(bet.odds);
+
+    let winningsMessage = '';
+
+    if (isWin) {
+        bet.status = 'won';
+        betStats.wins++;
+        betStats.currentStreak++;
+        if (betStats.currentStreak > betStats.bestStreak) {
+            betStats.bestStreak = betStats.currentStreak;
+        }
+
+        // Parse and apply payout
+        const scenario = scenarios[bet.scenarioIndex];
+        const rewards = parsePayout(scenario.payout);
+        const rewardMessages = [];
+
+        rewards.forEach(reward => {
+            if (reward.type === 'jackpot') {
+                // JACKPOT: Double all wallet amounts!
+                walletState.forEach(cat => {
+                    cat.items.forEach(item => {
+                        const amt = parseFloat(item.amount.replace(/[^0-9.]/g, '')) || 0;
+                        if (amt > 0) {
+                            item.amount = String(Math.floor(amt * 2));
+                        }
+                    });
+                });
+                rewardMessages.push('JACKPOT: ALL ASSETS DOUBLED!');
+            } else if (reward.type === 'special') {
+                rewardMessages.push(`${reward.message}`);
+            } else if (reward.type === 'asset') {
+                const rewardAmount = reward.amount * bet.amount;
+                const added = addToWallet(reward.asset, rewardAmount);
+                if (added) {
+                    rewardMessages.push(`+${rewardAmount} ${reward.asset}`);
+                } else {
+                    addToWallet(bet.asset, rewardAmount);
+                    rewardMessages.push(`+${rewardAmount} ${bet.asset} (converted)`);
+                }
+            }
+        });
+
+        winningsMessage = rewardMessages.join(' | ');
+
+        if (!betStats.biggestWin || rewards.length > 0) {
+            betStats.biggestWin = { scenario: bet.scenarioName, payout: scenario.payout, wager: bet.amount };
+        }
+
+        playSound('win');
+        spawnConfetti();
+    } else {
+        bet.status = 'lost';
+        betStats.losses++;
+        betStats.currentStreak = 0;
+        playSound('loss');
+    }
+
+    // Move to history
+    const historyBet = { ...bet, resolvedAt: Date.now(), winnings: winningsMessage };
+    addToBetHistory(historyBet);
+
+    // Remove from active bets
+    activeBets.splice(betIndex, 1);
+    saveActiveBets();
+    saveBetStats();
+    saveWalletState();
+
+    // Update UI
+    renderActiveBets();
+    renderWallet();
+
+    // Show result modal
+    showBetResolutionResult(bet, isWin, winningsMessage);
+
+    // Check bankruptcy
+    checkWalletBankruptcy();
+}
+
+function determineBetOutcomeFromOdds(oddsString) {
+    const winProbability = calculateWinProbability(oddsString);
+    const roll = Math.random();
+    return roll < winProbability;
+}
+
+function resumeActiveBets() {
+    // On page load, resume any active bets that haven't resolved yet
+    const now = Date.now();
+    const expiredBets = [];
+
+    activeBets.forEach(bet => {
+        if (bet.status === 'active') {
+            if (bet.resolvesAt <= now) {
+                // Bet should have resolved while page was closed
+                expiredBets.push(bet.id);
+            } else {
+                // Schedule remaining time
+                scheduleBetResolution(bet);
+            }
+        }
+    });
+
+    // Resolve any expired bets
+    expiredBets.forEach(betId => {
+        resolveBet(betId);
+    });
+
+    renderActiveBets();
+}
+
+function showBetResolutionResult(bet, isWin, winningsMessage) {
+    const existingModal = document.getElementById('bet-result-modal');
+    if (existingModal) existingModal.remove();
+
+    const messages = isWin ? BET_MESSAGES.win : BET_MESSAGES.loss;
+    const message = messages[Math.floor(Math.random() * messages.length)];
+
+    const modal = document.createElement('div');
+    modal.id = 'bet-result-modal';
+    modal.className = `bet-result-modal ${isWin ? 'win' : 'loss'}`;
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', isWin ? 'You won!' : 'You lost');
+
+    modal.innerHTML = `
+        <div class="bet-result-content">
+            <div class="result-icon">${isWin ? '🎰' : '💀'}</div>
+            <div class="result-status">${isWin ? 'WINNER!' : 'LOSS'}</div>
+            <div class="result-message">${message}</div>
+            <div class="result-details">
+                <div class="result-scenario">${bet.scenarioName}</div>
+                <div class="result-odds">Odds: ${bet.odds}</div>
+                <div class="result-wagered">Wagered: ${bet.amount}x ${bet.asset}</div>
+                ${isWin && winningsMessage ? `<div class="result-winnings">${winningsMessage}</div>` : ''}
+            </div>
+            <button class="result-close-btn" onclick="closeBetResult()">
+                ${isWin ? 'COLLECT WINNINGS' : 'ACCEPT DEFEAT'}
+            </button>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Animate in
+    requestAnimationFrame(() => {
+        modal.classList.add(CONFIG.CLASS_ACTIVE);
+    });
+}
+
+function resetWallet() {
+    walletState = JSON.parse(JSON.stringify(walletData));
+    betStats = {
+        totalBets: 0,
+        wins: 0,
+        losses: 0,
+        biggestWin: null,
+        currentStreak: 0,
+        bestStreak: 0
+    };
+    betHistory = [];
+    activeBets = [];
+    saveWalletState();
+    saveBetStats();
+    saveBetHistory();
+    saveActiveBets();
+    selectedCurrency = null;
+    selectedCurrencyData = null;
+    renderWallet();
+    renderActiveBets();
+    showToast('WALLET RESET: Fresh start. Same questionable decisions await.');
+}
+
+// Find asset in walletState by name
+function findAssetInWallet(assetName) {
+    for (const category of walletState) {
+        const item = category.items.find(i => i.name === assetName);
+        if (item) {
+            return { item, category };
+        }
+    }
+    return null;
+}
+
+// Deduct from wallet balance
+function deductFromWallet(assetName, amount) {
+    const found = findAssetInWallet(assetName);
+    if (!found) return false;
+
+    const { item } = found;
+    const currentAmount = parseFloat(item.amount.replace(/[^0-9.]/g, '')) || 1;
+    const newAmount = Math.max(0, currentAmount - amount);
+
+    // Preserve any prefix/suffix (like $ or ½)
+    if (item.amount.startsWith('$')) {
+        item.amount = `$${newAmount.toFixed(2)}`;
+    } else if (item.amount.includes('½') && newAmount === 0) {
+        item.amount = '0';
+    } else {
+        item.amount = String(newAmount);
+    }
+
+    saveWalletState();
+    return true;
+}
+
+// Add to wallet balance
+function addToWallet(assetName, amount) {
+    const found = findAssetInWallet(assetName);
+    if (!found) return false;
+
+    const { item } = found;
+    const currentAmount = parseFloat(item.amount.replace(/[^0-9.]/g, '')) || 0;
+    const newAmount = currentAmount + amount;
+
+    // Preserve any prefix/suffix
+    if (item.amount.startsWith('$')) {
+        item.amount = `$${newAmount.toFixed(2)}`;
+    } else {
+        item.amount = String(Math.floor(newAmount));
+    }
+
+    saveWalletState();
+    return true;
+}
+
+// Calculate win probability from odds string (e.g., "25/1" means 1 in 26 chance)
+function calculateWinProbability(oddsString) {
+    const parts = oddsString.split('/');
+    if (parts.length !== 2) return 0.5;
+
+    const numerator = parseInt(parts[0]);
+    const denominator = parseInt(parts[1]);
+
+    // Fractional odds: X/Y means Y wins per X losses
+    // Probability = denominator / (numerator + denominator)
+    const probability = denominator / (numerator + denominator);
+
+    // Apply modifier
+    return Math.min(0.95, probability * CONFIG.WIN_PROBABILITY_MODIFIER);
+}
+
+// Determine if bet wins based on odds
+function determineBetOutcome(scenario) {
+    const winProbability = calculateWinProbability(scenario.odds);
+    const roll = Math.random();
+    return roll < winProbability;
+}
+
+// Parse payout string to get reward details
+function parsePayout(payoutString) {
+    // Examples: "1 $HAMPSTRDANCE", "3 $LOLCAT", "1 Diamond Hands NFT + 10 $ONFLEEK"
+    const rewards = [];
+
+    // Handle "THE ENTIRE WALLET" special case
+    if (payoutString.includes('ENTIRE WALLET')) {
+        return [{ type: 'jackpot', message: 'THE ENTIRE WALLET' }];
+    }
+
+    // Handle "Sweet Release of Unconsciousness" special case
+    if (payoutString.includes('Sweet Release')) {
+        return [{ type: 'special', asset: 'Sleep', amount: 1, message: 'Sweet Release of Unconsciousness' }];
+    }
+
+    // Split by + for multiple rewards
+    const parts = payoutString.split('+').map(p => p.trim());
+
+    parts.forEach(part => {
+        // Match patterns like "1 $HAMPSTRDANCE" or "Diamond Hands NFT"
+        const match = part.match(/^(\d+)?\s*(.+)$/);
+        if (match) {
+            const amount = match[1] ? parseInt(match[1]) : 1;
+            const asset = match[2].trim();
+            rewards.push({ type: 'asset', asset, amount });
+        }
+    });
+
+    return rewards;
+}
+
+// Win/Loss result messages - NOW USING BET_MESSAGES (defined in Feature 13 section)
+// See BET_MESSAGES.win, BET_MESSAGES.loss, BET_MESSAGES.broke
+
 // DOM ELEMENTS
 const walletToggleBtn = document.getElementById('wallet-toggle-btn');
 const walletDrawer = document.getElementById('wallet-drawer');
@@ -626,6 +1073,11 @@ document.addEventListener('DOMContentLoaded', () => {
     renderOdds();
     setupEventListeners();
     startOddsFluctuation();
+
+    // Active bets - resume any pending and start timer
+    renderActiveBets();
+    resumeActiveBets();
+    startActiveBetsTimer();
 
     // Waiver modal
     initWaiverModal();
@@ -676,27 +1128,166 @@ function renderTicker() {
 
 function renderWallet() {
     let html = '';
-    walletData.forEach(cat => {
+    let totalAssets = 0;
+
+    walletState.forEach(cat => {
         html += `<div class="wallet-category-title">${cat.category}</div>`;
         html += `<div class="wallet-category-grid">`;
         cat.items.forEach(item => {
-            const loreAttr = item.lore ? `data-lore="${item.lore.replace(/"/g, '&quot;')}"` : '';
-            const hasLore = item.lore ? 'has-lore' : '';
+            // Get lore from original walletData (walletState may not have it after localStorage load)
+            const originalItem = walletData.find(c => c.categoryId === cat.categoryId)?.items.find(i => i.id === item.id);
+            const lore = item.lore || originalItem?.lore || '';
+            const loreAttr = lore ? `data-lore="${lore.replace(/"/g, '&quot;')}"` : '';
+            const hasLore = lore ? 'has-lore' : '';
+
+            // Check if item has balance
+            const amount = parseFloat(item.amount.replace(/[^0-9.]/g, '')) || 0;
+            const isEmpty = amount <= 0;
+            const emptyClass = isEmpty ? 'empty' : '';
+
+            if (!isEmpty) totalAssets++;
+
             // Use item-specific aria-label for better screen reader context
             const loreAriaLabel = `View lore for ${item.name}`;
             html += `
-                <div class="wallet-item ${hasLore}"
-                     onclick="selectAsset(this, '${item.name}')"
-                     ${loreAttr}>
+                <div class="wallet-item ${hasLore} ${emptyClass}"
+                     onclick="${isEmpty ? '' : `selectAsset(this, '${item.name}')`}"
+                     ${loreAttr}
+                     ${isEmpty ? 'aria-disabled="true"' : ''}>
                     <div class="item-name">${item.name}</div>
-                    <div class="item-amount">${item.amount}</div>
-                    ${item.lore ? `<button class="lore-trigger" onclick="event.stopPropagation(); showLorePopover(this.parentElement)" aria-label="${loreAriaLabel}">?</button>` : ''}
+                    <div class="item-amount ${isEmpty ? 'depleted' : ''}">${isEmpty ? 'DEPLETED' : item.amount}</div>
+                    ${lore ? `<button class="lore-trigger" onclick="event.stopPropagation(); showLorePopover(this.parentElement)" aria-label="${loreAriaLabel}">?</button>` : ''}
                 </div>
             `;
         });
         html += `</div>`;
     });
+
+    // Add wallet summary and reset button at bottom
+    html += `
+        <div class="wallet-footer">
+            <div class="wallet-stats">
+                <span class="stat-item">Assets: ${totalAssets}</span>
+                <span class="stat-item">Bets: ${betStats.totalBets}</span>
+                <span class="stat-item">W/L: ${betStats.wins}/${betStats.losses}</span>
+            </div>
+            <button class="wallet-reset-btn" onclick="confirmResetWallet()" aria-label="Reset wallet to defaults">
+                🔄 RESET WALLET
+            </button>
+        </div>
+    `;
+
+    // Add bet history section if there are bets
+    if (betHistory.length > 0) {
+        const recentBets = betHistory.slice(-5).reverse(); // Last 5 bets, newest first
+        html += `
+            <div class="bet-history-section">
+                <div class="wallet-category-title">📜 Recent Wagers</div>
+                <div class="bet-history-list">
+                    ${recentBets.map(bet => `
+                        <div class="bet-history-item ${bet.status}">
+                            <div class="bet-history-main">
+                                <span class="bet-status-icon">${bet.status === 'won' ? '✅' : '❌'}</span>
+                                <span class="bet-scenario">${bet.scenarioName}</span>
+                            </div>
+                            <div class="bet-history-details">
+                                <span class="bet-asset">${bet.amount}x ${bet.asset}</span>
+                                <span class="bet-result">${bet.status === 'won' ? bet.payout || 'WIN' : 'LOST'}</span>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+
     walletGrid.innerHTML = html;
+}
+
+function confirmResetWallet() {
+    if (confirm('Reset your wallet? All progress will be lost. Your questionable decisions will be forgotten. Start fresh?')) {
+        resetWallet();
+    }
+}
+
+// ============================================
+// ACTIVE BETS UI RENDERING
+// ============================================
+function renderActiveBets() {
+    const container = document.getElementById('active-bets-list');
+    const countEl = document.getElementById('active-bets-count');
+    const panel = document.getElementById('active-bets-panel');
+
+    if (!container) return;
+
+    if (countEl) countEl.textContent = activeBets.length;
+
+    // Show/hide panel based on active bets
+    if (panel) {
+        panel.style.display = activeBets.length > 0 ? 'block' : 'none';
+    }
+
+    if (activeBets.length === 0) {
+        container.innerHTML = '<p class="no-bets">No active wagers. Place a bet to begin your descent into madness.</p>';
+        return;
+    }
+
+    container.innerHTML = activeBets.map(bet => {
+        const timeLeft = Math.max(0, bet.resolvesAt - Date.now());
+        const seconds = Math.ceil(timeLeft / 1000);
+        const totalDuration = getBetDuration(bet.hours);
+        const progress = Math.max(0, Math.min(100, 100 - (timeLeft / totalDuration * 100)));
+
+        return `
+            <div class="active-bet-item" data-bet-id="${bet.id}">
+                <div class="bet-info">
+                    <span class="bet-scenario">${bet.scenarioName}</span>
+                    <span class="bet-asset">${bet.amount}x ${bet.asset}</span>
+                </div>
+                <div class="bet-odds">Odds: ${bet.odds}</div>
+                <div class="bet-timer-container">
+                    <div class="bet-progress-bar">
+                        <div class="bet-progress-fill" style="width: ${progress}%"></div>
+                    </div>
+                    <div class="bet-timer" data-resolve="${bet.resolvesAt}">
+                        ${seconds > 0 ? `${seconds}s` : 'Resolving...'}
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// Update active bet timers every second
+let activeBetsTimerInterval = null;
+
+function startActiveBetsTimer() {
+    if (activeBetsTimerInterval) clearInterval(activeBetsTimerInterval);
+
+    activeBetsTimerInterval = setInterval(() => {
+        const timerElements = document.querySelectorAll('.bet-timer[data-resolve]');
+        const progressElements = document.querySelectorAll('.active-bet-item');
+
+        timerElements.forEach((el, index) => {
+            const resolveAt = parseInt(el.dataset.resolve);
+            const timeLeft = Math.max(0, resolveAt - Date.now());
+            const seconds = Math.ceil(timeLeft / 1000);
+            el.textContent = seconds > 0 ? `${seconds}s` : 'Resolving...';
+
+            // Update progress bar
+            if (progressElements[index]) {
+                const betItem = progressElements[index];
+                const betId = betItem.dataset.betId;
+                const bet = activeBets.find(b => b.id == betId);
+                if (bet) {
+                    const totalDuration = getBetDuration(bet.hours);
+                    const progress = Math.max(0, Math.min(100, 100 - (timeLeft / totalDuration * 100)));
+                    const progressFill = betItem.querySelector('.bet-progress-fill');
+                    if (progressFill) progressFill.style.width = `${progress}%`;
+                }
+            }
+        });
+    }, 1000);
 }
 
 // Lore Popover System
@@ -816,11 +1407,17 @@ function selectAsset(element, assetName) {
     element.classList.add(CONFIG.CLASS_SELECTED);
     selectedCurrency = assetName;
 
-    // Find the full asset data from walletData
+    // Find the full asset data from walletState (mutable, current amounts)
     selectedCurrencyData = null;
-    for (const category of walletData) {
+    for (const category of walletState) {
         const found = category.items.find(item => item.name === assetName);
         if (found) {
+            // Check if actually has balance
+            const amount = parseFloat(found.amount.replace(/[^0-9.]/g, '')) || 0;
+            if (amount <= 0) {
+                showErrorToast('ACTION_UNAVAILABLE');
+                return;
+            }
             selectedCurrencyData = {
                 ...found,
                 category: category.category,
@@ -939,13 +1536,43 @@ function closeModal() {
 
 function placeBet() {
     if (!selectedCurrency) {
-        // Use new error messaging
         showErrorToast('NO_CURRENCY');
         return;
     }
+
+    // Verify we still have enough balance (could have changed)
+    const currentAsset = findAssetInWallet(selectedCurrency);
+    if (!currentAsset) {
+        showErrorToast('ACTION_UNAVAILABLE');
+        return;
+    }
+
+    const currentAmount = parseFloat(currentAsset.item.amount.replace(/[^0-9.]/g, '')) || 0;
+    if (currentAmount < wagerAmount) {
+        showErrorToast('ACTION_UNAVAILABLE');
+        return;
+    }
+
+    // Check max active bets
+    if (activeBets.length >= CONFIG.MAX_ACTIVE_BETS) {
+        showToast(`MAX BETS REACHED: Wait for a bet to resolve. Patience, degenerate.`);
+        return;
+    }
+
     const s = scenarios[selectedScenario];
 
-    // GOLD FLASH EFFECT
+    // DEDUCT FROM WALLET IMMEDIATELY
+    deductFromWallet(selectedCurrency, wagerAmount);
+
+    // Update stats (totalBets tracked when bet placed, win/loss tracked on resolution)
+    betStats.totalBets++;
+    saveBetStats();
+
+    // CREATE ACTIVE BET (timer-based resolution)
+    const assetId = selectedCurrencyData?.id || 'unknown';
+    createActiveBet(s, selectedScenario, selectedCurrency, assetId, wagerAmount);
+
+    // VISUAL EFFECTS
     if (!document.body.classList.contains(CONFIG.CLASS_REDUCE_MOTION)) {
         document.body.classList.add(CONFIG.CLASS_FLASH_ACTIVE);
         setTimeout(() => {
@@ -953,18 +1580,163 @@ function placeBet() {
         }, CONFIG.FLASH_DURATION);
     }
 
-    // Show bet confirmation banner (drops from top) - NO CP EARNED
-    showBetBanner(s.name);
-
-    // Also show toast for desktop users
-    showToast(`WAGER PLACED: ${selectedCurrency} on ${s.name}`);
+    // Close scenario modal
     closeModal();
-    spawnConfetti();
 
-    // Play sound if enabled
+    // Show bet placed confirmation
+    const betDuration = getBetDuration(s.hours) / 1000;
+    const placedMessage = BET_MESSAGES.placed[Math.floor(Math.random() * BET_MESSAGES.placed.length)];
+    showToast(`${placedMessage} (Resolves in ${betDuration}s)`);
+
+    // Play bet sound
     playSound('bet');
 
-    // Easter egg triggers (keep Clippy and RealPlayer logic if exists later in file)
+    // Spawn confetti for the excitement
+    spawnConfetti();
+
+    // Update wallet display
+    renderWallet();
+
+    // Clear selection
+    selectedCurrency = null;
+    selectedCurrencyData = null;
+
+    // EASTER EGG: Trigger RealPlayer popup on 3rd bet
+    if (betStats.totalBets === 3 && !realPlayerShown) {
+        setTimeout(() => {
+            showRealPlayerPopup();
+        }, 2500);
+    }
+
+    // EASTER EGG: Trigger Clippy on 7th bet
+    if (betStats.totalBets === 7 && !clippyShown) {
+        setTimeout(() => {
+            triggerClippy();
+        }, 3000);
+    }
+
+    // Check if wallet is completely empty (may happen immediately after bet)
+    checkWalletBankruptcy();
+}
+
+function checkWalletBankruptcy() {
+    let totalBalance = 0;
+    walletState.forEach(cat => {
+        cat.items.forEach(item => {
+            totalBalance += parseFloat(item.amount.replace(/[^0-9.]/g, '')) || 0;
+        });
+    });
+
+    if (totalBalance <= 0) {
+        setTimeout(() => {
+            showBankruptcyModal();
+        }, 2000);
+    }
+}
+
+function showBetResult(isWin, scenario, wagered, winningsMessage) {
+    const existingModal = document.getElementById('bet-result-modal');
+    if (existingModal) existingModal.remove();
+
+    const messages = isWin ? BET_MESSAGES.win : BET_MESSAGES.loss;
+    const message = messages[Math.floor(Math.random() * messages.length)];
+
+    const modal = document.createElement('div');
+    modal.id = 'bet-result-modal';
+    modal.className = `bet-result-modal ${isWin ? 'win' : 'loss'}`;
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', isWin ? 'You won!' : 'You lost');
+
+    modal.innerHTML = `
+        <div class="bet-result-content">
+            <div class="result-icon">${isWin ? '🎰' : '💀'}</div>
+            <div class="result-status">${isWin ? 'WINNER!' : 'LOSS'}</div>
+            <div class="result-message">${message}</div>
+            <div class="result-details">
+                <div class="result-scenario">${scenario.name}</div>
+                <div class="result-odds">Odds: ${scenario.odds}</div>
+                <div class="result-wagered">Wagered: ${wagered}x ${selectedCurrency || 'asset'}</div>
+                ${isWin ? `<div class="result-winnings">${winningsMessage}</div>` : ''}
+            </div>
+            <button class="result-close-btn" onclick="closeBetResult()">
+                ${isWin ? 'COLLECT WINNINGS' : 'ACCEPT DEFEAT'}
+            </button>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Animate in
+    requestAnimationFrame(() => {
+        modal.classList.add('active');
+    });
+
+    // Confetti on win
+    if (isWin) {
+        spawnConfetti();
+        setTimeout(spawnConfetti, 300);
+    }
+
+    // Auto-close after 8 seconds
+    setTimeout(() => {
+        if (document.getElementById('bet-result-modal')) {
+            closeBetResult();
+        }
+    }, 8000);
+}
+
+function closeBetResult() {
+    const modal = document.getElementById('bet-result-modal');
+    if (modal) {
+        modal.classList.remove('active');
+        setTimeout(() => modal.remove(), 300);
+    }
+}
+
+function showBankruptcyModal() {
+    const existingModal = document.getElementById('bankruptcy-modal');
+    if (existingModal) existingModal.remove();
+
+    const message = BET_MESSAGES.broke[Math.floor(Math.random() * BET_MESSAGES.broke.length)];
+
+    const modal = document.createElement('div');
+    modal.id = 'bankruptcy-modal';
+    modal.className = 'bet-result-modal loss bankruptcy';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+
+    modal.innerHTML = `
+        <div class="bet-result-content">
+            <div class="result-icon">💸</div>
+            <div class="result-status">BANKRUPT</div>
+            <div class="result-message">${message}</div>
+            <div class="result-details">
+                <div class="result-scenario">Total Bets: ${betStats.totalBets}</div>
+                <div class="result-odds">Win Rate: ${betStats.totalBets > 0 ? Math.round((betStats.wins / betStats.totalBets) * 100) : 0}%</div>
+                <div class="result-wagered">Best Streak: ${betStats.bestStreak}</div>
+            </div>
+            <button class="result-close-btn" onclick="resetWallet(); closeBankruptcyModal();">
+                🔄 START OVER
+            </button>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    requestAnimationFrame(() => {
+        modal.classList.add('active');
+    });
+
+    playSound('error');
+}
+
+function closeBankruptcyModal() {
+    const modal = document.getElementById('bankruptcy-modal');
+    if (modal) {
+        modal.classList.remove('active');
+        setTimeout(() => modal.remove(), 300);
+    }
 }
 
 let toastTimeout;
@@ -1540,6 +2312,42 @@ async function withLoadingMessage(container, asyncFn) {
     }
 }
 
+// Full-screen loading overlay for bet resolution
+function showBetLoadingOverlay() {
+    const existingOverlay = document.getElementById('bet-loading-overlay');
+    if (existingOverlay) existingOverlay.remove();
+
+    const message = getLoadingMessage();
+    const overlay = document.createElement('div');
+    overlay.id = 'bet-loading-overlay';
+    overlay.className = 'bet-loading-overlay';
+    overlay.setAttribute('role', 'status');
+    overlay.setAttribute('aria-live', 'polite');
+    overlay.setAttribute('aria-label', 'Processing your wager');
+
+    overlay.innerHTML = `
+        <div class="bet-loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-message">${message}<span class="loading-dots"></span></div>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    // Animate in
+    requestAnimationFrame(() => {
+        overlay.classList.add('show');
+    });
+}
+
+function hideBetLoadingOverlay() {
+    const overlay = document.getElementById('bet-loading-overlay');
+    if (overlay) {
+        overlay.classList.remove('show');
+        setTimeout(() => overlay.remove(), 300);
+    }
+}
+
 // ============================================
 // ERROR MESSAGING
 // ============================================
@@ -1666,6 +2474,21 @@ function playSound(type) {
             // Casino chip sound - soft ding
             playTone(800, 0.1, 'sine', 0.3);
             setTimeout(() => playTone(1000, 0.1, 'sine', 0.2), 50);
+            break;
+
+        case 'win':
+            // Triumphant ascending arpeggio
+            playTone(523, 0.15, 'sine', 0.4); // C5
+            setTimeout(() => playTone(659, 0.15, 'sine', 0.4), 100); // E5
+            setTimeout(() => playTone(784, 0.15, 'sine', 0.4), 200); // G5
+            setTimeout(() => playTone(1047, 0.3, 'sine', 0.5), 300); // C6
+            break;
+
+        case 'loss':
+            // Descending sad tones
+            playTone(440, 0.2, 'sine', 0.3); // A4
+            setTimeout(() => playTone(349, 0.2, 'sine', 0.25), 150); // F4
+            setTimeout(() => playTone(294, 0.4, 'triangle', 0.2), 300); // D4
             break;
 
         case 'toast':
@@ -1838,6 +2661,12 @@ const BET_MESSAGES = {
         "Failure is just success in disguise. A very good disguise.",
         "You've lost, but at least it wasn't real money. Small mercies.",
         "The gambling gods demand sacrifice. Today, it was your dignity."
+    ],
+    broke: [
+        "BANKRUPT. You've achieved the ultimate hospital caregiver achievement: emotional AND financial ruin.",
+        "EMPTY WALLET. Time to reset and start your bad decisions fresh.",
+        "NOTHING LEFT. The house took everything. The house is undefeated.",
+        "TAPPED OUT. Your assets are gone. Your dignity left hours ago."
     ]
 };
 
@@ -2048,16 +2877,13 @@ function triggerKonamiReward() {
     // 2. Add temporary buff to visual display
     addKonamiBuff();
 
-    // 3. Unlock secret achievement
-    const konamiAchievement = {
-        id: 'konami_master',
-        name: 'UP UP DOWN DOWN',
-        description: 'You remembered the code. You remember too much.',
-        icon: '🎮'
-    };
-
-    if (!unlockedAchievements.includes('konami_master')) {
-        setTimeout(() => unlockAchievement(konamiAchievement), 1500);
+    // 3. Show secret achievement toast (achievement system removed, just show message)
+    const konamiShown = localStorage.getItem('degen_konami_achievement_shown');
+    if (!konamiShown) {
+        setTimeout(() => {
+            showToast("🏆 SECRET UNLOCKED: UP UP DOWN DOWN — You remembered the code. You remember too much.");
+            localStorage.setItem('degen_konami_achievement_shown', 'true');
+        }, 1500);
     }
 
     // Visual flourish
@@ -2238,27 +3064,15 @@ function initAimTooltips() {
 }
 
 // ============================================
-// FEATURE 20: LIMEWIRE DOWNLOAD ACHIEVEMENT
+// FEATURE 20: LIMEWIRE LOADING MESSAGES
 // ============================================
-// Add to the ACHIEVEMENTS array - this is a special rare achievement
-const LIMEWIRE_ACHIEVEMENT = {
-    id: 'limewire_hope',
-    name: '"Hope.mp3"',
-    description: 'You\'ve downloaded Hope.mp3 via LimeWire. File may contain: malware, viruses, or a mislabeled Linkin Park song.',
-    icon: '💾',
-    trigger: (stats) => stats.betsPlaced >= 15 && Math.random() < 0.3 // 30% chance after 15 bets
-};
-
-// Add LimeWire loading message to the pool
+// Add LimeWire-themed loading messages to the pool (achievement system removed)
 LOADING_MESSAGES.push(
     "Downloading Hope.mp3 from LimeWire... (47 hours remaining)",
     "Buffering via RealPlayer... please wait...",
     "Your download will complete in approximately: ∞",
     "Searching Kazaa for 'medical_miracle.exe'..."
 );
-
-// Extend achievements array with LimeWire achievement
-ACHIEVEMENTS.push(LIMEWIRE_ACHIEVEMENT);
 
 // ============================================
 // FEATURE 21: CLIPPY EASTER EGG
